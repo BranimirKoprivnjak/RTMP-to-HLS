@@ -1,0 +1,22 @@
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+  "email": "email@gmail.com",
+  "password": "pw"
+}
+
+###
+
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "email": "email@gmail.com",
+  "password": "pw"
+}
+
+###
+
+GET http://localhost:3000/protected
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJmMGYwNjAxMTA3ZGU4NGE1OGY2ZDgyIn0sImlhdCI6MTY1OTk1ODkwNiwiZXhwIjoxNjYyNTUwOTA2fQ.6MVfXIAn3NLbX20Gt6xJ-Nf6eQgfS1Y_heDARFyaLus
