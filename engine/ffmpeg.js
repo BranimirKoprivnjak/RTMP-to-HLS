@@ -1,4 +1,4 @@
-const { thumbnails } = require('../config/default');
+require('dotenv').config();
 
 const transmuxHlsArgs = [
   '-map',
@@ -78,7 +78,7 @@ const transmuxHlsArgs = [
 const screenshotArgs = [
   '-y',
   '-vf',
-  `fps=1/${thumbnails.newThumbnailAfter},scale=440:-1`,
+  `fps=1/${process.env.NEW_THUMBNAIL_EVERY},scale=440:-1`,
 ];
 
 const initialScreenshotArgs = ['-frames:v', '1', '-s', '440x248'];
@@ -93,4 +93,4 @@ module.exports = {
 // https://docs.peer5.com/guides/production-ready-hls-vod/#how-to-choose-the-right-bitrate
 // http://ffmpeg.org/ffmpeg-formats.html#hls
 // https://trac.ffmpeg.org/wiki/Encode/H.264
-// https://gist.github.com/tayvano/6e2d456a9897f55025e25035478a3a50 -> complete list of ffmpeg commands
+// https://gist.github.com/tayvano/6e2d456a9897f55025e25035478a3a50

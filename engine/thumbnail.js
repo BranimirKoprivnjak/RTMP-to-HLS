@@ -1,8 +1,10 @@
+require('dotenv').config();
 const { spawn } = require('child_process');
 
-const { encoding } = require('../config/default');
 const { initialScreenshotArgs } = require('./ffmpeg');
 const Logs = require('../logs/logs');
+
+const ffmpeg = process.env.FFMPEG;
 
 const createInitialThumbnail = streamKey => {
   const inputPath = `./media/live/${streamKey}/master-480p.m3u8`;
@@ -10,9 +12,9 @@ const createInitialThumbnail = streamKey => {
 
   const args = ['-y', '-i', inputPath, ...initialScreenshotArgs, outputPath];
 
-  const process = spawn(encoding.ffmpeg, args);
+  const process = spawn(ffmpeg, args);
 
-  if (encoding.allowStdout) {
+  if (false) {
     process.stdout.on('data', data => {
       console.log(`stdout: ${data}`);
     });

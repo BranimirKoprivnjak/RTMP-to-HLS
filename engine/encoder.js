@@ -1,14 +1,17 @@
+require('dotenv').config();
 const { workerData, parentPort } = require('worker_threads');
 const { spawn } = require('child_process');
 
-const { encoding, rtmp_server } = require('../config/default');
 const { transmuxHlsArgs, screenshotArgs } = require('./ffmpeg');
 const Logs = require('../logs/logs');
+
+const ffmpeg = process.env.FFMPEG;
+const port = process.env.RTMP_PORT || 1935;
 
 function encode() {
   const { streamPath, streamKey } = workerData;
 
-  const inputPath = `rtmp://127.0.0.1:${rtmp_server.rtmp.port}${streamPath}`;
+  const inputPath = `rtmp://127.0.0.1:${port}${streamPath}`;
   const streamOutputPath = `./media${streamPath}/master-%v.m3u8`;
   const thumbnailsOutputPath = `./media/thumbnails/${streamKey}/thumbnail_%03d.png`;
 
@@ -31,9 +34,9 @@ function encode() {
     thumbnailsOutputPath,
   ];
 
-  const process = spawn(encoding.ffmpeg, args);
+  const process = spawn(ffmpeg, args);
 
-  if (encoding.allowStdout) {
+  if (false) {
     process.stdout.on('data', data => {
       console.log(`stdout: ${data}`);
     });

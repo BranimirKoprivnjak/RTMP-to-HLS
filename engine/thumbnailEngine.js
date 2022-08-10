@@ -44,18 +44,20 @@ const watchForIncomingStreams = async data => {
 
 const getMostRecentThumbnail = async streamKey => {
   const thumbPath = path.join(__dirname, `../media/thumbnails/${streamKey}`);
-  const files = await fs.readdir(thumbPath, { encoding: 'buffer' });
+  const files = await fs.readdir(thumbPath);
   return files[files.length - 1];
 };
 
 const deleteThumbnailsOnSchedule = async () => {
-  const thumbnailsRoot = path.join(__dirname, `../media/thumbnails`);
+  const rootDir = path.join(__dirname, `../media/thumbnails`);
   try {
-    const thumbnails = await fs.readdir(thumbnailsRoot);
-    for (const streamKey of thumbnails) {
-      const key = await fs.readdir(`${thumbnailsRoot}/${streamKey}`);
-      for (const thumbnail of key) {
-        fs.unlink(`${thumbnailsRoot}/${key}/${thumbnail}`);
+    const allThumbnails = await fs.readdir(rootDir);
+    for (const thumbnailsPerStream of allThumbnails) {
+      const thumbnailsPerStreamDir = await fs.readdir(
+        `${rootDir}/${thumbnailsPerStream}`
+      );
+      for (const thumbnail of thumbnailsPerStreamDir) {
+        fs.unlink(`${rootDir}/${thumbnailsPerStreamDir}/${thumbnail}`);
       }
     }
   } catch (error) {

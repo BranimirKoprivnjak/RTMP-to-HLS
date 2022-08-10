@@ -1,43 +1,53 @@
+require('dotenv').config();
 const NodeMediaServer = require('node-media-server');
-const cron = require('node-cron');
 
-const { thumbnails, rtmp_server } = require('./config/default');
 const User = require('./models/User');
 const EncoderEngine = require('./engine/encoderEngine');
 const thumbnailEngine = require('./engine/thumbnailEngine');
+const { encoders, streams } = require('./context/ctx');
 
-cron.schedule(thumbnails.crontab, () => {
-  deleteThumbnailsOnSchedule();
-});
+const config = {
+  rtmp: {
+    port: process.env.RTMP_PORT || 1935,
+    chunk_size: 60000,
+    gop_cache: true,
+    ping: 30,
+    ping_timeout: 60,
+  },
+};
 
-const nodeMediaServer = new NodeMediaServer(rtmp_server);
-// cosider using session management lib
-const encoderSession = new Map();
+const nodeMediaServer = new NodeMediaServer(config);
 
 nodeMediaServer.on('postPublish', async (id, streamPath, args) => {
   const streamKey = getStreamKeyFromStreamPath(streamPath);
 
-  const keyExists = await User.streamKeyExists(streamKey);
+  const user = await User.findOne({ stream_key: streamKey }).exec();
+  const streamKeyExists = user?.stream_key;
 
-  if (!keyExists) {
+  if (!streamKeyExists) {
     const session = nodeMediaServer.getSession(id);
     session.reject();
   } else {
-    const session = new EncoderEngine({ id, streamPath, streamKey });
-    encoderSession.set(id, session);
+    const encoder = new EncoderEngine({ id, streamPath, streamKey });
+    encoders.set(id, encoder);
+
+    streams.set(id, {
+      username: user.username,
+      session: nodeMediaServer.getSession(id),
+    });
 
     data = { id, streamPath, streamKey };
 
-    session.prepareForEncoding();
+    encoder.prepareForEncoding();
     thumbnailEngine.watchForIncomingStreams(data);
 
-    session.on('done', () => encoderSession.delete(id));
+    encoder.on('done', () => encoders.delete(id));
   }
 });
 
 nodeMediaServer.on('donePublish', (id, streamPath, args) => {
-  const session = encoderSession.get(id);
-  if (session) session.kill();
+  const encoder = encoders.get(id);
+  if (encoder) encoder.kill();
 });
 
 const getStreamKeyFromStreamPath = path => {

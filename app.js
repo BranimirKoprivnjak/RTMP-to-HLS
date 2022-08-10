@@ -1,10 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-// const nodeMediaServer = require('./media_server');
+const nodeMediaServer = require('./media_server');
 
-// const { port } = require('./config/default').http_server;
-// const Logs = require('./logs/logs');
+const Logs = require('./logs/logs');
 const routes = require('./routes/index');
 
 const mongooseOptions = {
@@ -17,24 +16,28 @@ mongoose
 
 mongoose.connection.on('error', err => console.log(err));
 
+const port = process.env.HTTP_PORT || 8080;
+
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.all('*', (req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', 'http://localhost:9500');
-//   next();
-// });
+app.all('*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
+// app.use(express.static('media')); could be used to serve .m3u8 & .ts
 
 routes(app);
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.status(404).json({ error: '404! Not Found.' });
 });
 
-app.listen(3000, () => {
-  console.log('Listening on port: ' + 3000);
+app.listen(port, () => {
+  Logs.log('Listening on port: ' + port);
 });
 
-// nodeMediaServer.run();
+nodeMediaServer.run();

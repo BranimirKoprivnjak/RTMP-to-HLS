@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
+  username: String,
   email: String,
   password: {
     hash: String,

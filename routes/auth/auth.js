@@ -6,7 +6,7 @@ const User = require('../../models/User');
 const auth = require('../middleware');
 
 router.post('/register', async (req, res) => {
-  const { email, password } = req.body;
+  const { username, email, password } = req.body;
 
   try {
     const userExists = await User.findOne({ email }).exec();
@@ -16,6 +16,7 @@ router.post('/register', async (req, res) => {
 
     const user = new User();
     const { hash, salt } = await user.generatePassword(password);
+    user.username = username;
     user.email = email;
     user.password.hash = hash;
     user.password.salt = salt;

@@ -1,4 +1,15 @@
-POST http://localhost:3000/register
+POST http://localhost:8080/auth/register
+Content-Type: application/json
+
+{
+  "username": "singatroon",
+  "email": "email@gmail.com",
+  "password": "pw"
+}
+
+###
+
+POST http://localhost:8080/auth/login
 Content-Type: application/json
 
 {
@@ -8,15 +19,17 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/login
-Content-Type: application/json
-
-{
-  "email": "email@gmail.com",
-  "password": "pw"
-}
+GET http://localhost:8080/auth/protected
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJmMzZlYTA1NzMwOGRhMGVhODg2YjI2In0sImlhdCI6MTY2MDEyMDczNiwiZXhwIjoxNjYwNzI1NTM2fQ.gREz_LL4tneEnF8OjzsxotupB0KGHJtEcB7k8UMLWEY
 
 ###
 
-GET http://localhost:3000/protected
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJmMGYwNjAxMTA3ZGU4NGE1OGY2ZDgyIn0sImlhdCI6MTY1OTk1ODkwNiwiZXhwIjoxNjYyNTUwOTA2fQ.6MVfXIAn3NLbX20Gt6xJ-Nf6eQgfS1Y_heDARFyaLus
+GET http://localhost:8080/live/streams
+
+###
+
+GET http://localhost:8080/live/thumb/fcfa70e1-b291-4e9c-8a7d-b211abe57986
+
+###
+
+GET http://localhost:8080/live/stream/fcfa70e1-b291-4e9c-8a7d-b211abe57986/master-480p2.ts
