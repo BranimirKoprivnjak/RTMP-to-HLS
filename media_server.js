@@ -18,7 +18,7 @@ const config = {
 
 const nodeMediaServer = new NodeMediaServer(config);
 
-nodeMediaServer.on('postPublish', async (id, streamPath, args) => {
+nodeMediaServer.on('prePublish', async (id, streamPath, args) => {
   const streamKey = getStreamKeyFromStreamPath(streamPath);
 
   const user = await User.findOne({ stream_key: streamKey }).exec();
