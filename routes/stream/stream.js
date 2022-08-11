@@ -28,15 +28,13 @@ router.get('/thumb/:streamKey', async (req, res) => {
 });
 
 // gets hls playlist file;
-// TODO: gzip compression,
+// TODO: gzip compression, req.header should have accept encoding
 // double check everything with draft https://datatracker.ietf.org/doc/html/draft-pantos-hls-rfc8216bis-08
-// .ts response, what content type? octet-stream or video/MP2T
-// .m3u8, what content type?
 // implement some kind of timeout for request from same ip
-router.get('/stream/:streamKey/:fileType', async (req, res) => {
+router.get('/stream/:streamKey/:file', async (req, res) => {
   const filePath = path.join(
     __dirname,
-    '../../media/live/' + req.params.streamKey + '/' + req.params.fileType
+    '../../media/live/' + req.params.streamKey + '/' + req.params.file
   );
 
   try {
@@ -49,11 +47,18 @@ router.get('/stream/:streamKey/:fileType', async (req, res) => {
           .send(playlist);
         break;
       case '.ts':
+        await fs.access(filePath);
         // const chunk = await fs.readFile(filePath);
-        res.set('Content-Type', 'video/mp2t').status(206).send(chunk);
-        const chunk = fs2.createReadStream(filePath, { bufferSize: 64 * 1024 });
+        res.set('Content-Type', 'video/mp2t').status(206);
+        const chunk = fs2.createReadStream(filePath, {
+          highWaterMark: 64 * 1024,
+        });
         chunk.pipe(res);
         break;
+      default:
+        res
+          .status(400)
+          .json({ msg: 'Unknown file type: ' + path.extname(req.url) });
     }
   } catch (error) {
     if (error.code === 'ENOENT') {

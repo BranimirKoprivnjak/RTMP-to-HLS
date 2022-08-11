@@ -32,4 +32,4 @@ GET http://localhost:8080/live/thumb/fcfa70e1-b291-4e9c-8a7d-b211abe57986
 
 ###
 
-GET http://localhost:8080/live/stream/fcfa70e1-b291-4e9c-8a7d-b211abe57986/master-480p2.ts
+GET http://localhost:8080/live/stream/fcfa70e1-b291-4e9c-8a7d-b211abe57986/playlist.ts

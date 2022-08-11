@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+// add FRAME-RATE attr
 const transmuxHlsArgs = [
   '-map',
   '0:v:0',
@@ -20,7 +21,7 @@ const transmuxHlsArgs = [
   '-c:v',
   'libx264',
   '-crf',
-  '17',
+  '23',
   '-g',
   '120',
   '-keyint_min',
@@ -70,7 +71,7 @@ const transmuxHlsArgs = [
   '-master_pl_publish_rate',
   '2',
   '-hls_flags',
-  'delete_segments',
+  'delete_segments+independent_segments',
   '-master_pl_name',
   'playlist.m3u8',
 ];
