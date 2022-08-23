@@ -23,10 +23,16 @@ class EncoderEngine extends EventEmitter {
   }
 
   startEncoding() {
+    const { streamPath, streamKey } = this.data;
+
+    Logs.log(
+      `[Encoding HLS] ${streamPath} to ./media${streamPath}/playlist.m3u8`
+    );
+
     this.worker = new workerThreads.Worker('./engine/encoder.js', {
       workerData: {
-        streamPath: this.data.streamPath,
-        streamKey: this.data.streamKey,
+        streamPath,
+        streamKey,
       },
     });
 
@@ -52,6 +58,7 @@ class EncoderEngine extends EventEmitter {
           fs.unlink(path.join(this.path, file));
         }
       } catch (error) {
+        // if resource is busy, try again
         Logs.error(error);
       }
     }, 1000);

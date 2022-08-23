@@ -16,14 +16,14 @@ Media stream can be played in browser using the any player that supports Media s
 
 ### To do
 
-- delay vod deletion on stream end so clients have time to fetch latest chunks
-- cap frames to 30 on 360p resolution
-- fine-tune -crf
+- delay vod deletion on stream end so clients have time to fetch latest chunks?
+- cap frames to 30 on 360p & 480p resolution
 - swap fs.watch with chokidar
-- upgrade to fluent-ffmpeg
-- run performance tests
-- provide api with live streams data
+- upgrade to fluent-ffmpeg?
 - build frontend
+- add Bilinear Image Scaling
+- add audio&video ready event
+- add fallbacks for thumbs creation if source lower then 480p
 
 ### How it all works
 

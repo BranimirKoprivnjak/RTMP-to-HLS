@@ -45,6 +45,8 @@ nodeMediaServer.on('prePublish', async (id, streamPath, args) => {
   }
 });
 
+// nodeMediaServer.on('audio&videoHandled', height => {});
+
 nodeMediaServer.on('donePublish', (id, streamPath, args) => {
   const encoder = encoders.get(id);
   if (encoder) encoder.kill();
