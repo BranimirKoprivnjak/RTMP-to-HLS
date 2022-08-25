@@ -51,12 +51,6 @@ class UserClass {
   generateStreamKey() {
     return uuidv4();
   }
-
-  async streamKeyExists(key) {
-    // const filteredKeys = await this.find({ stream_key: key });
-    // return filteredKeys.length > 0 ? true : false;
-    return await this.findOne({ stream_key: key }).exec(); // test if works as intended
-  }
 }
 
 userSchema.loadClass(UserClass);
